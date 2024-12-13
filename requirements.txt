@@ -1,0 +1,8 @@
+wheel==0.42.0
+aiofiles==23.2.1
+ebooklib==0.18
+Pygments==2.17.2
+typer==0.9.0
+rich==13.7.0
+chardet==5.2.0
+tqdm==4.66.1

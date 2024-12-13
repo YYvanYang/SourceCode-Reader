@@ -1,0 +1,7 @@
+.zed
+repo
+*.epub
+*.pdf
+.DS_Store
+output
+venv
