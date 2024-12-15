@@ -1,6 +1,7 @@
 % 基础包
 \usepackage[utf8]{inputenc}
-\usepackage{xeCJK}      % 中文支持
+\usepackage{fontspec}
+\usepackage[SlantFont,BoldFont]{xeCJK}
 \usepackage{graphicx}   % 图片支持
 \usepackage{geometry}   % 页面布局
 \usepackage{titlesec}   % 标题控制
@@ -12,6 +13,14 @@
 \usepackage{upquote}    % 智能引号
 \usepackage{microtype}  % 微排版
 \usepackage{etoolbox}   % 工具包
+\usepackage{unicode-math}    % Unicode数学支持
+\usepackage{enumitem}       % 列表环境增强
+\usepackage{caption}        % 图表标题
+\usepackage{subcaption}     % 子图表支持
+\usepackage{listings}       % 代码列表
+\usepackage{makeidx}        % 索引支持
+\usepackage{hyperref}       % 超链接支持
+\usepackage{bookmark}       % PDF书签增强
 
 % 定义代码高亮颜色
 \definecolor{shadecolor}{RGB}{248,248,248}
@@ -74,18 +83,51 @@
 % 页面设置
 \geometry{
     a4paper,
-    margin=2.5cm,
-    headheight=14pt
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=14pt,
+    footskip=1cm,
+    includehead,
+    includefoot
 }
 
 % 中文字体设置
-\setCJKmainfont[BoldFont={PingFang SC}]{Songti SC}  % 正文使用宋体，粗体使用苹方
-\setCJKsansfont{PingFang SC}  % 无衬线字体使用苹方
-\setmonofont{Menlo}  % 使用 Menlo 作为等宽字体
+\setCJKmainfont[
+    BoldFont={PingFang SC Bold},
+    ItalicFont={PingFang SC Light},
+    BoldItalicFont={PingFang SC Semibold}
+]{Songti SC}
+\setCJKsansfont[
+    BoldFont={PingFang SC Bold},
+    ItalicFont={PingFang SC Light}
+]{PingFang SC}
+\setCJKmonofont{Menlo}
+
+% 中文标点优化
+\punctstyle{quanjiao}
+\normalspacedchars{/}
 
 % 基本命令
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% 代码高亮优化
+\lstset{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    commentstyle=\color{commentcolor}\itshape,
+    stringstyle=\color{stringcolor}
+}
+
+% 优化段落间距
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{2em}
 
 % hyperref 包需要放在最后
 \usepackage{hyperref}
