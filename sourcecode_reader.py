@@ -19,38 +19,6 @@ import tempfile
 import sys
 import chardet
 
-# 在文件顶部添加
-MAIN_TEX_TEMPLATE = r"""
-\documentclass[a4paper,12pt]{article}
-
-% 导入包配置
-\input{templates/latex/includes/packages}
-
-% 文档信息
-\title{\Large{$title$}}
-\author{$author$}
-\date{$date$}
-
-\begin{document}
-
-$if(title)$
-\maketitle
-\thispagestyle{empty}  % 移除首页页码
-$endif$
-
-$body$
-
-\end{document}
-"""
-
-PACKAGES_TEX_TEMPLATE = r"""
-% 基础包
-\usepackage[utf8]{inputenc}
-\usepackage{xeCJK}      % 中文支持
-\usepackage{graphicx}   % 图片支持
-...(您提供的packages.tex的完整内容)...
-"""
-
 class ConfigManager:
     def __init__(self):
         self.config = configparser.ConfigParser()
