@@ -220,6 +220,7 @@ class DocumentGenerator:
         """根据文件扩展名检测语言"""
         ext = os.path.splitext(filename)[1].lower()
         language_map = {
+            # 编程语言
             '.py': 'python',
             '.js': 'javascript',
             '.jsx': 'javascript',
@@ -237,14 +238,40 @@ class DocumentGenerator:
             '.php': 'php',
             '.swift': 'swift',
             '.kt': 'kotlin',
-            '.kts': 'kotlin',
             '.scala': 'scala',
             '.m': 'objectivec',
             '.mm': 'objectivec',
             '.pl': 'perl',
+            '.dart': 'dart',
+            '.lua': 'lua',
+            '.r': 'r',
+            '.ex': 'elixir',
+            '.exs': 'elixir',
+            '.erl': 'erlang',
+            '.hrl': 'erlang',
+            '.clj': 'clojure',
+            '.fs': 'fsharp',
+            '.hs': 'haskell',
+            '.ml': 'ocaml',
+            '.f90': 'fortran',
+            '.jl': 'julia',
+            '.pas': 'pascal',
+            '.vb': 'vbnet',
+            '.asm': 'nasm',
+            '.s': 'gas',
+            '.el': 'lisp',
+            
+            # 脚本和配置
             '.sh': 'bash',
             '.ps1': 'powershell',
             '.psm1': 'powershell',
+            '.gradle': 'groovy',
+            '.sbt': 'scala',
+            '.tf': 'hcl',
+            '.conf': 'ini',
+            '.properties': 'ini',
+            
+            # 标记和样式
             '.md': 'markdown',
             '.json': 'json',
             '.xml': 'xml',
@@ -252,9 +279,19 @@ class DocumentGenerator:
             '.yml': 'yaml',
             '.toml': 'toml',
             '.ini': 'ini',
-            '.sql': 'sql'
+            '.sql': 'sql',
+            '.css': 'css',
+            '.scss': 'scss',
+            '.less': 'less',
+            '.html': 'html',
+            '.htm': 'html',
+            '.vue': 'vue',
+            
+            # 其他
+            '.txt': 'text',
+            '.vim': 'vim',
         }
-        return language_map.get(ext, 'text')
+        return language_map.get(ext, 'text')  # 默认返回'text'
 
     def _sanitize_filename(self, filename):
         """清理文件名"""
