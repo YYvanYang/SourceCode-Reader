@@ -337,7 +337,7 @@ class FileManager:
         """初始化文件管理器"""
         self.logger = logger
         self.supported_extensions = supported_extensions
-        self.max_files = 50  # 限制最大文件数
+        self.max_files = 500  # 限制最大文件数
         self.max_file_size = 1024 * 1024  # 限制单个文件大小为1MB
 
     def _get_files_to_process(self, full_repo_dir, supported_extensions):
