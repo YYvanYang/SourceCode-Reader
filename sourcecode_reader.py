@@ -52,9 +52,22 @@ class GitManager:
                 import shutil
                 shutil.rmtree(full_repo_dir)
             
+            # 添加克隆优化选项
+            cmd = [
+                'git', 'clone',
+                '--depth=1',  # 只克隆最新的提交
+                '--single-branch',  # 只克隆单个分支
+                '--no-tags',  # 不下载标签
+                '--filter=blob:none',  # 不下载大文件
+                '--config', 'core.compression=0',  # 减少压缩
+                '--config', 'http.postBuffer=524288000',  # 增加缓冲区大小
+                repo_url,
+                full_repo_dir
+            ]
+            
             # 克隆仓库
             process = await asyncio.create_subprocess_exec(
-                'git', 'clone', repo_url, full_repo_dir,
+                *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
