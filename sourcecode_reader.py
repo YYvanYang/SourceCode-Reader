@@ -19,38 +19,6 @@ import tempfile
 import sys
 import chardet
 
-# 在文件顶部添加
-MAIN_TEX_TEMPLATE = r"""
-\documentclass[a4paper,12pt]{article}
-
-% 导入包配置
-\input{templates/latex/includes/packages}
-
-% 文档信息
-\title{\Large{$title$}}
-\author{$author$}
-\date{$date$}
-
-\begin{document}
-
-$if(title)$
-\maketitle
-\thispagestyle{empty}  % 移除首页页码
-$endif$
-
-$body$
-
-\end{document}
-"""
-
-PACKAGES_TEX_TEMPLATE = r"""
-% 基础包
-\usepackage[utf8]{inputenc}
-\usepackage{xeCJK}      % 中文支持
-\usepackage{graphicx}   % 图片支持
-...(您提供的packages.tex的完整内容)...
-"""
-
 class ConfigManager:
     def __init__(self):
         self.config = configparser.ConfigParser()
@@ -220,6 +188,7 @@ class DocumentGenerator:
         """根据文件扩展名检测语言"""
         ext = os.path.splitext(filename)[1].lower()
         language_map = {
+            # 编程语言
             '.py': 'python',
             '.js': 'javascript',
             '.jsx': 'javascript',
@@ -237,14 +206,40 @@ class DocumentGenerator:
             '.php': 'php',
             '.swift': 'swift',
             '.kt': 'kotlin',
-            '.kts': 'kotlin',
             '.scala': 'scala',
             '.m': 'objectivec',
             '.mm': 'objectivec',
             '.pl': 'perl',
+            '.dart': 'dart',
+            '.lua': 'lua',
+            '.r': 'r',
+            '.ex': 'elixir',
+            '.exs': 'elixir',
+            '.erl': 'erlang',
+            '.hrl': 'erlang',
+            '.clj': 'clojure',
+            '.fs': 'fsharp',
+            '.hs': 'haskell',
+            '.ml': 'ocaml',
+            '.f90': 'fortran',
+            '.jl': 'julia',
+            '.pas': 'pascal',
+            '.vb': 'vbnet',
+            '.asm': 'nasm',
+            '.s': 'gas',
+            '.el': 'lisp',
+            
+            # 脚本和配置
             '.sh': 'bash',
             '.ps1': 'powershell',
             '.psm1': 'powershell',
+            '.gradle': 'groovy',
+            '.sbt': 'scala',
+            '.tf': 'hcl',
+            '.conf': 'ini',
+            '.properties': 'ini',
+            
+            # 标记和样式
             '.md': 'markdown',
             '.json': 'json',
             '.xml': 'xml',
@@ -252,9 +247,19 @@ class DocumentGenerator:
             '.yml': 'yaml',
             '.toml': 'toml',
             '.ini': 'ini',
-            '.sql': 'sql'
+            '.sql': 'sql',
+            '.css': 'css',
+            '.scss': 'scss',
+            '.less': 'less',
+            '.html': 'html',
+            '.htm': 'html',
+            '.vue': 'vue',
+            
+            # 其他
+            '.txt': 'text',
+            '.vim': 'vim',
         }
-        return language_map.get(ext, 'text')
+        return language_map.get(ext, 'text')  # 默认返回'text'
 
     def _sanitize_filename(self, filename):
         """清理文件名"""
@@ -332,7 +337,7 @@ class FileManager:
         """初始化文件管理器"""
         self.logger = logger
         self.supported_extensions = supported_extensions
-        self.max_files = 50  # 限制最大文件数
+        self.max_files = 500  # 限制最大文件数
         self.max_file_size = 1024 * 1024  # 限制单个文件大小为1MB
 
     def _get_files_to_process(self, full_repo_dir, supported_extensions):
