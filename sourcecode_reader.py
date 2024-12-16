@@ -6,10 +6,6 @@ import logging
 import configparser
 import asyncio
 import aiofiles
-from ebooklib import epub
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name, guess_lexer
-from pygments.formatters import HtmlFormatter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 import typer
