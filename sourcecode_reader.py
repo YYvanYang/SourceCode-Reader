@@ -342,19 +342,25 @@ class EbookCreator:
             return False
 
 class FileManager:
-    def __init__(self, logger, supported_extensions):
+    def __init__(self, logger, supported_extensions, config_manager):
         """初始化文件管理器"""
         self.logger = logger
         self.supported_extensions = supported_extensions
-        self.max_files = 500  # 限制最大文件数
+        self.max_files = 1000  # 限制最大文件数
         self.max_file_size = 1024 * 1024  # 限制单个文件大小为1MB
+        # 获取需要排除的目录列表
+        self.excluded_dirs = config_manager.get('output', 'excluded_dirs', fallback='').split(',')
+        self.excluded_dirs = [d.strip() for d in self.excluded_dirs if d.strip()]
 
     def _get_files_to_process(self, full_repo_dir, supported_extensions):
         """获取需要处理的文件列表"""
         files = []
         file_count = 0
         
-        for root, _, filenames in os.walk(full_repo_dir):
+        for root, dirs, filenames in os.walk(full_repo_dir):
+            # 过滤掉不需要的目录
+            dirs[:] = [d for d in dirs if d not in self.excluded_dirs]
+            
             for filename in filenames:
                 if file_count >= self.max_files:
                     break
@@ -421,9 +427,9 @@ async def main():
     config_manager = ConfigManager()
     git_manager = GitManager()
     supported_extensions = config_manager.get('output', 'supported_extensions').split(',')
-    file_manager = FileManager(logger, supported_extensions)
+    file_manager = FileManager(logger, supported_extensions, config_manager)
     doc_generator = DocumentGenerator(config_manager.get('output', 'output_dir'))
-    doc_generator.logger = logger  # 添加logger
+    doc_generator.logger = logger
 
     # 创建进度显示
     with Progress(
