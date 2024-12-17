@@ -348,9 +348,11 @@ class FileManager:
         self.supported_extensions = supported_extensions
         self.max_files = 1000  # 限制最大文件数
         self.max_file_size = 1024 * 1024  # 限制单个文件大小为1MB
-        # 获取需要排除的目录列表
+        # 获取需要排除的目录和文件列表
         self.excluded_dirs = config_manager.get('output', 'excluded_dirs', fallback='').split(',')
         self.excluded_dirs = [d.strip() for d in self.excluded_dirs if d.strip()]
+        self.excluded_files = config_manager.get('output', 'excluded_files', fallback='').split(',')
+        self.excluded_files = [f.strip() for f in self.excluded_files if f.strip()]
 
     def _get_files_to_process(self, full_repo_dir, supported_extensions):
         """获取需要处理的文件列表"""
@@ -364,6 +366,10 @@ class FileManager:
             for filename in filenames:
                 if file_count >= self.max_files:
                     break
+                    
+                # 检查是否在排除文件列表中
+                if filename in self.excluded_files:
+                    continue
                     
                 file_path = os.path.join(root, filename)
                 
