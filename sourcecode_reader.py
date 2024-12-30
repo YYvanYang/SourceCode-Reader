@@ -405,6 +405,9 @@ class FileManager:
             # 获取相对路径作为标题
             relative_path = os.path.relpath(file_path, start=full_repo_dir)
             chapter_title = relative_path.replace('/', ' > ')
+            
+            # 处理长行
+            content = self._handle_long_lines(content)
 
             return chapter_title, content
         except Exception as e:
@@ -420,6 +423,20 @@ class FileManager:
                 return result['encoding'] or 'utf-8'
         except Exception:
             return 'utf-8'
+
+    def _handle_long_lines(self, content):
+        """处理长行，确保它们不会超出 LaTeX 的限制"""
+        max_line_length = 100  # 设置最大行长度
+        lines = content.splitlines()
+        new_lines = []
+        for line in lines:
+            if len(line) > max_line_length:
+                # 将长行分割成多个短行
+                parts = [line[i:i+max_line_length] for i in range(0, len(line), max_line_length)]
+                new_lines.extend(parts)
+            else:
+                new_lines.append(line)
+        return '\n'.join(new_lines)
 
 async def main():
     # 设置日志
