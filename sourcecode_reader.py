@@ -101,7 +101,12 @@ class DocumentGenerator:
                 for i, (title, content) in enumerate(chapters):
                     file_path = os.path.join(temp_dir, f"{i:04d}_{title}.md")
                     async with aiofiles.open(file_path, 'w', encoding='utf-8') as f:
-                        await f.write(f"# {title}\n\n`````{self._detect_language(title)}\n{content}\n`````\n\n")
+                        # 如果是 markdown 文件，直接写入内容
+                        if title.lower().endswith('.md'):
+                            await f.write(f"# {title}\n\n{content}\n\n")
+                        else:
+                            # 其他类型的文件用代码块包裹
+                            await f.write(f"# {title}\n\n`````{self._detect_language(title)}\n{content}\n`````\n\n")
                     chapter_files.append(file_path)
 
                 # 生成PDF和EPUB
