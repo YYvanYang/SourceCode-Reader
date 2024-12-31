@@ -7,6 +7,9 @@
 \usepackage{titlesec}   % 标题控制
 \usepackage{longtable}  % 长表格支持
 \usepackage{booktabs}   % 表格美化
+\usepackage{array}      % 增强的表格功能
+\usepackage{calc}       % 长度计算支持
+\usepackage{ragged2e}   % 文本对齐支持
 \usepackage{xcolor}     % 颜色支持
 \usepackage{fancyvrb}   % 代码高亮支持
 \usepackage{fvextra}    % 扩展的代码支持
@@ -19,7 +22,6 @@
 \usepackage{subcaption}     % 子图表支持
 \usepackage{listings}       % 代码列表
 \usepackage{makeidx}        % 索引支持
-\usepackage{hyperref}       % 超链接支持
 \usepackage{bookmark}       % PDF书签增强
 
 % 定义代码高亮颜色
@@ -41,7 +43,9 @@
     framesep=3pt,
     baselinestretch=1.2,
     xleftmargin=0.5em,
-    xrightmargin=0.5em
+    xrightmargin=0.5em,
+    fontfamily=tt,
+    formatcom=\setmonofont{Menlo}
 }
 
 % 定义代码块背景
@@ -97,15 +101,15 @@
 
 % 中文字体设置
 \setCJKmainfont[
-    BoldFont={Heiti SC},
-    ItalicFont={PingFang SC},
-    BoldItalicFont={Heiti SC}
+    BoldFont={Songti SC Bold},
+    ItalicFont={Songti SC Light},
+    BoldItalicFont={Songti SC Bold}
 ]{Songti SC}
 \setCJKsansfont[
-    BoldFont={Heiti SC},
-    ItalicFont={PingFang SC}
+    BoldFont={PingFang SC Semibold},
+    ItalicFont={PingFang SC Light}
 ]{PingFang SC}
-\setCJKmonofont{Menlo}
+\setCJKmonofont{STFangsong}  % 添加等宽中文字体
 
 % 中文标点优化
 \punctstyle{quanjiao}
@@ -117,19 +121,33 @@
 
 % 代码高亮优化
 \lstset{
-    basicstyle=\small\ttfamily,
+    basicstyle=\small\ttfamily\setmonofont{Menlo},
     breaklines=true,
     frame=single,
     numbers=left,
     numberstyle=\tiny,
     keywordstyle=\color{keywordcolor}\bfseries,
-    commentstyle=\color{commentcolor}\itshape,
-    stringstyle=\color{stringcolor}
+    commentstyle=\color{commentcolor}\CJKfamily{rm}\itshape,
+    stringstyle=\color{stringcolor},
+    % 设置中文字体
+    texcl=true,
+    keepspaces=true,
+    columns=flexible
 }
 
 % 优化段落间距
 \setlength{\parskip}{0.5em}
 \setlength{\parindent}{2em}
+
+% 在页面设置后添加
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.65}
+\renewcommand{\floatpagefraction}{0.60}
+
+% 设置目录深度
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 
 % hyperref 包需要放在最后
 \usepackage{hyperref}
