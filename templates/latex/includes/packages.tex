@@ -41,7 +41,9 @@
     framesep=3pt,
     baselinestretch=1.2,
     xleftmargin=0.5em,
-    xrightmargin=0.5em
+    xrightmargin=0.5em,
+    fontfamily=tt,
+    formatcom=\setmonofont{Menlo}
 }
 
 % 定义代码块背景
@@ -97,15 +99,14 @@
 
 % 中文字体设置
 \setCJKmainfont[
-    BoldFont={Heiti SC},
-    ItalicFont={PingFang SC},
-    BoldItalicFont={Heiti SC}
+    BoldFont={Songti SC},
+    ItalicFont={Songti SC},
+    BoldItalicFont={Songti SC}
 ]{Songti SC}
 \setCJKsansfont[
-    BoldFont={Heiti SC},
+    BoldFont={PingFang SC},
     ItalicFont={PingFang SC}
 ]{PingFang SC}
-\setCJKmonofont{Menlo}
 
 % 中文标点优化
 \punctstyle{quanjiao}
@@ -117,14 +118,29 @@
 
 % 代码高亮优化
 \lstset{
-    basicstyle=\small\ttfamily,
+    basicstyle=\small\ttfamily\setmonofont{Menlo},
     breaklines=true,
     frame=single,
     numbers=left,
     numberstyle=\tiny,
     keywordstyle=\color{keywordcolor}\bfseries,
-    commentstyle=\color{commentcolor}\itshape,
-    stringstyle=\color{stringcolor}
+    commentstyle=\color{commentcolor}\CJKfamily{rm}\itshape,
+    stringstyle=\color{stringcolor},
+    % 设置中文字体
+    texcl=true,
+    keepspaces=true,
+    columns=flexible,
+    literate={
+        {。}{{\CJKfamily{rm}。}}1
+        {，}{{\CJKfamily{rm}，}}1
+        {：}{{\CJKfamily{rm}：}}1
+        {；}{{\CJKfamily{rm}；}}1
+        {！}{{\CJKfamily{rm}！}}1
+        {？}{{\CJKfamily{rm}？}}1
+        {（}{{\CJKfamily{rm}（}}1
+        {）}{{\CJKfamily{rm}）}}1
+        {、}{{\CJKfamily{rm}、}}1
+    }
 }
 
 % 优化段落间距
