@@ -299,6 +299,7 @@ class EbookCreator:
                 progress_callback("正在克隆仓库...", 0.1)
             full_repo_dir = await self.git_manager.clone_repo(repo_url)
             if not full_repo_dir:
+                self.logger.error(f"克隆仓库失败: {repo_url}")
                 return False
 
             # 获取需要处理的文件
@@ -308,6 +309,12 @@ class EbookCreator:
                 full_repo_dir,
                 self.file_manager.supported_extensions
             )
+            
+            # 添加日志输出处理的文件数量
+            self.logger.info(f"找到 {len(files_to_process)} 个文件需要处理")
+            if not files_to_process:
+                self.logger.error(f"在目录 {full_repo_dir} 中没有找到支持的文件类型")
+                return False
 
             # 处理文件
             chapters = []
@@ -315,12 +322,15 @@ class EbookCreator:
             
             with tqdm(total=total_files, desc="处理文件") as pbar:
                 for file_path in files_to_process:
+                    self.logger.debug(f"正在处理文件: {file_path}")
                     result = self.file_manager.process_file(file_path, full_repo_dir)
                     if result:
                         chapter_title, content = result
                         chapters.append((chapter_title, content))
                     pbar.update(1)
 
+            # 添加日志输出成功处理的章节数量
+            self.logger.info(f"成功处理 {len(chapters)} 个章节")
             if not chapters:
                 self.logger.error("没有找到可处理的文件")
                 return False
@@ -391,38 +401,74 @@ class FileManager:
         """处理单个文件"""
         try:
             # 检查文件大小
-            if os.path.getsize(file_path) > self.max_file_size:
-                self.logger.debug(f"文件太大: {file_path}")
+            file_size = os.path.getsize(file_path)
+            if file_size > self.max_file_size:
+                self.logger.debug(f"文件太大: {file_path} ({file_size} bytes)")
                 return None
                 
             # 检测文件编码
             encoding = self._detect_file_encoding(file_path)
+            self.logger.debug(f"文件 {file_path} 使用编码: {encoding}")
             
             # 读取文件内容
-            with open(file_path, 'r', encoding=encoding) as f:
-                content = f.read()
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    content = f.read()
+            except UnicodeDecodeError as e:
+                self.logger.error(f"文件 {file_path} 解码失败: {str(e)}")
+                return None
+            except Exception as e:
+                self.logger.error(f"读取文件 {file_path} 失败: {str(e)}")
+                return None
 
             # 获取相对路径作为标题
             relative_path = os.path.relpath(file_path, start=full_repo_dir)
             chapter_title = relative_path.replace('/', ' > ')
             
+            # 检查内容是否为空
+            if not content.strip():
+                self.logger.debug(f"文件 {file_path} 内容为空")
+                return None
+            
             # 处理长行
             content = self._handle_long_lines(content)
-
+            
+            self.logger.debug(f"成功处理文件 {file_path}")
             return chapter_title, content
+            
         except Exception as e:
-            self.logger.debug(f"处理文件失败: {file_path}, {str(e)}")
+            self.logger.error(f"处理文件失败: {file_path}, 错误: {str(e)}")
             return None
 
     def _detect_file_encoding(self, file_path):
         """检测文件编码"""
         try:
-            with open(file_path, 'rb') as f:
-                raw_data = f.read()
-                result = chardet.detect(raw_data)
-                return result['encoding'] or 'utf-8'
-        except Exception:
-            return 'utf-8'
+            # 首先尝试 UTF-8
+            with open(file_path, 'r', encoding='utf-8') as f:
+                f.read()
+                return 'utf-8'
+        except UnicodeDecodeError:
+            try:
+                # 如果 UTF-8 失败，使用 chardet
+                with open(file_path, 'rb') as f:
+                    raw_data = f.read()
+                    result = chardet.detect(raw_data)
+                    if result['confidence'] > 0.7:  # 只在置信度较高时使用检测结果
+                        return result['encoding']
+                    
+                # 如果检测结果不可靠，尝试常见编码
+                for encoding in ['gb18030', 'gbk', 'iso-8859-1', 'latin1']:
+                    try:
+                        with open(file_path, 'r', encoding=encoding) as f:
+                            f.read()
+                            return encoding
+                    except UnicodeDecodeError:
+                        continue
+                    
+                return 'utf-8'  # 如果都失败了，默认使用 UTF-8
+            except Exception as e:
+                self.logger.error(f"编码检测失败: {file_path}, 错误: {str(e)}")
+                return 'utf-8'
 
     def _handle_long_lines(self, content):
         """处理长行，确保它们不会超出 LaTeX 的限制"""
