@@ -27,8 +27,8 @@ setup:
 		echo "警告: SF Mono 字体复制失败，请确保已安装 Xcode"; \
 	fi
 	$(PYTHON) -m venv venv
-	./venv/bin/pip install --upgrade pip wheel
-	./venv/bin/pip install --use-pep517 -r requirements.txt
+	./venv/bin/pip install --upgrade pip wheel --no-cache-dir --disable-pip-version-check -i https://pypi.tuna.tsinghua.edu.cn/simple
+	./venv/bin/pip install --use-pep517 -r requirements.txt --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple
 	mkdir -p output repo
 	@echo "环境配置完成"
 
