@@ -138,9 +138,6 @@ class DocumentGenerator:
             "-V", f"author={self.config.get('document', 'author', fallback='SourceCode Reader')}",
             "-V", f"date={self.config.get('document', 'date', fallback=today_value)}",
             "-V", f"geometry:margin={self.config.get('document', 'margin', fallback='2.5cm')}",
-            "-V", f"mainfont={self.config.get('document', 'mainfont', fallback='Songti SC')}",
-            "-V", f"sansfont={self.config.get('document', 'sansfont', fallback='PingFang SC')}",
-            "-V", f"monofont={self.config.get('document', 'monofont', fallback='Menlo')}",
             "-o", pdf_output
         ] + chapter_files
 
