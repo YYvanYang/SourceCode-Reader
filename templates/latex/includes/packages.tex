@@ -1,7 +1,12 @@
 % 基础包
 \usepackage[utf8]{inputenc}
 \usepackage{fontspec}
-\setmonofont{Menlo}  % 设置全局等宽字体为 Menlo
+\setmonofont{SF Mono}[
+    UprightFeatures={Font=* Regular},
+    BoldFeatures={Font=* Bold},
+    ItalicFeatures={Font=* Regular Italic},
+    BoldItalicFeatures={Font=* Bold Italic}
+]
 \usepackage[SlantFont,BoldFont]{xeCJK}
 \usepackage{graphicx}   % 图片支持
 \usepackage{geometry}   % 页面布局
@@ -45,7 +50,7 @@
     baselinestretch=1.2,
     xleftmargin=0.5em,
     xrightmargin=0.5em,
-    formatcom={\normalfont\ttfamily}  % 使用默认等宽字体设置
+    formatcom={\normalfont\ttfamily}
 }
 
 % 定义代码块背景
@@ -117,7 +122,7 @@
 
 % 为代码环境单独设置标点样式
 \lstset{
-    basicstyle=\small\ttfamily,  % 使用默认等宽字体设置
+    basicstyle=\small\ttfamily,
     breaklines=true,
     frame=single,
     numbers=left,
@@ -128,9 +133,9 @@
     texcl=true,
     keepspaces=true,
     columns=flexible,
-    upquote=true,  % 确保使用英文直引号
-    fontadjust=true,  % 确保字体设置生效
-    basewidth={0.5em,0.45em}  % 优化字符间距
+    upquote=true,
+    fontadjust=true,
+    basewidth={0.5em,0.45em}
 }
 
 % 基本命令
