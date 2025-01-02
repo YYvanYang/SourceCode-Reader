@@ -20,6 +20,12 @@ check-deps:
 
 setup:
 	@echo "使用 Python: $(PYTHON)"
+	@echo "复制 SF Mono 字体..."
+	@if [ ! -f ~/Library/Fonts/SF-Mono-Regular.otf ]; then \
+		mkdir -p ~/Library/Fonts && \
+		cp /Applications/Xcode.app/Contents/SharedFrameworks/DVTUserInterfaceKit.framework/Versions/A/Resources/Fonts/SF-Mono-* ~/Library/Fonts/ || \
+		echo "警告: SF Mono 字体复制失败，请确保已安装 Xcode"; \
+	fi
 	$(PYTHON) -m venv venv
 	./venv/bin/pip install --upgrade pip wheel
 	./venv/bin/pip install --use-pep517 -r requirements.txt
